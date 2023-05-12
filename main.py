@@ -49,25 +49,6 @@ class Movie(BaseModel):
             }
         }
 
-movies = [
-    {
-        'id': 1,
-        'title': 'Avatar',
-        'overview': "En un exuberante planeta llamado Pandora viven los Na'vi, seres que ...",
-        'year': '2009',
-        'rating': 7.8,
-        'category': 'Acción'    
-    },
-    {
-        'id': 2,
-        'title': 'Avatar',
-        'overview': "En un exuberante planeta llamado Pandora viven los Na'vi, seres que ...",
-        'year': '2009',
-        'rating': 7.8,
-        'category': 'Drama'    
-    }
-]
-
 @app.get('/', tags=['Home'])
 def root():
     #print(get_movie.__doc__)

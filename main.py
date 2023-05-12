@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException, Request, Path, Query, Depends
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.security.http import HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 from typing import Optional, List
-
 from starlette.requests import Request
 from jwt_manager import create_token, validate_token
 from fastapi.security import HTTPBearer
+from config.database import Session, engine, Base
+from models.movie import Movie
 
 app = FastAPI()
 app.title = 'My App of Movies'
@@ -14,6 +14,8 @@ app.version = '0.01'
 
 email = "admin@gmail.com"
 password = "admin"
+
+Base.metadata.create_all(bind=engine)
 
 class JWTBearer(HTTPBearer):
     async def __call__(self, request: Request):

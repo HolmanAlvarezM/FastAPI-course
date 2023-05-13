@@ -1,14 +1,10 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-from jwt_manager import create_token
+from utils.jwt_manager import create_token
 from middlewares.jwt_bearer import JWTBearer
+from schemas.user_schema import User
 
 user_router = APIRouter()
-
-class User(BaseModel):
-    email: str
-    password: str
 
 @user_router.post('/login', tags=['Auth'], status_code=200)
 def login(user: User):

@@ -1,29 +1,20 @@
-from fastapi import FastAPI, HTTPException, Request, Path, Query, Depends
+from fastapi import FastAPI, HTTPException, Path, Query, Depends
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field
 from typing import Optional, List
-from starlette.requests import Request
-from jwt_manager import create_token, validate_token
-from fastapi.security import HTTPBearer
+from jwt_manager import create_token
 from config.database import Session, engine, Base
 from models.movie import Movie as MovieModel
 from fastapi.encoders import jsonable_encoder
+from middlewares.error_handler import ErrorHandler
+from middlewares.jwt_bearer import JWTBearer
 
 app = FastAPI()
 app.title = 'My App of Movies'
 app.version = '0.01'
-
-email = "admin@gmail.com"
-password = "admin"
+app.add_middleware(ErrorHandler)
 
 Base.metadata.create_all(bind=engine)
-
-class JWTBearer(HTTPBearer):
-    async def __call__(self, request: Request):
-        auth = await super().__call__(request)
-        data = validate_token(auth.credentials)
-        if data['email'] != email:
-            raise HTTPException(status_code=403, detail="Credentials invalid")
 
 class User(BaseModel):
     email: str
@@ -56,7 +47,7 @@ def root():
 
 @app.post('/login', tags=['Auth'], status_code=200)
 def login(user: User):
-    if user.email == email and user.password == password:
+    if user.email == JWTBearer.email and user.password == JWTBearer.password:
         token:str = create_token(user.dict())
     return JSONResponse(content=token, status_code=200)
 

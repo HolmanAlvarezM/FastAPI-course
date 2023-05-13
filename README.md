@@ -97,11 +97,13 @@ pip install pyjwt
 
 ```sh
 pip3 freeze > requirements.txt
+pip3 install -r requirements.txt
 ```
 
 # Database, Modularation and production Deploy
 
 ## Install SQL Alchemy
+
 ```sh
 pip install sqlalchemy
 ```
